@@ -1,0 +1,18 @@
+name: Ping
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl --verbose ${{ secrets.API_ENDPOINT_BL }} 2>&1 \
+            | sed '/azurewebsites\.net/d' \
+            | perl -0pe 's/(?<=\/api\/)\S+/****/gm'
+      - run: |
+          curl --verbose ${{ secrets.API_ENDPOINT_NV }} 2>&1 \
+            | sed '/azurewebsites\.net/d' \
+            | perl -0pe 's/(?<=\/api\/)\S+/****/gm'
